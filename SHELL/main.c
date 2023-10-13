@@ -1,6 +1,6 @@
 #include "main.h"
 
-int main(int ac, char **av)
+int main(int ac, char **av, char **env)
 {
 
     char *lineptr;
@@ -25,7 +25,7 @@ int main(int ac, char **av)
 
 		printf("%s", prompt);
 		line = getline(&lineptr, &n, stdin);
-		lineptr_cpy = malloc(sizeof(char) * line);
+		lineptr_cpy = _strdup(lineptr);
 
 		if (line == -1)
              	{
@@ -67,7 +67,12 @@ int main(int ac, char **av)
 		
         	argv[i] = NULL;
 
-		if (strcmp(argv[0], "exit") == 0)
+		if (_strcmp(argv[0], "printenv") == 0)
+		{
+			_environ(env); /* Pass env to your print_environment function*/
+		}
+
+		if (_strcmp(argv[0], "exit") == 0)
 			_exits();
 		
 		_fork(argv);

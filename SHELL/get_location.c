@@ -2,61 +2,64 @@
 
 char *get_location(char *command)
 {
-	char *path, *path_copy, *path_token, *file_path;
-    	int command_length, directory_length;
-    	struct stat buffer;
+	char *path_copy;
+	char *path_token;
+	struct stat buffer;
+
+    char *path = getenv("PATH");
+    if (path == NULL) 
+    {
+        return NULL; /* PATH environment variable not set */
+    }
+
+    path_copy = _strdup(path);
+    if (path_copy == NULL)
+    {
+        return NULL; /* Memory allocation failed */
+    }
 
 
-        path = getenv("PATH");
-        /*Duplicate of path*/
-        path_copy = strdup(path);
 
-        command_length = strlen(command);
+    path_token = strtok(path_copy, ":");
+    while (path_token != NULL)
+    {
+        size_t directory_length = _strlen(path_token);
+        size_t command_length = _strlen(command);
+        size_t file_path_length = directory_length + 1 + command_length + 1; /* +1 for '/' and +1 for '\0' */
 
-        path_token = strtok(path_copy, ":");
-
-        while(path_token != NULL)
-        {
-            /* Get the length of the directory*/
-            directory_length = strlen(path_token);
-            /* allocate memory for storing the command name together with the directory name */
-            file_path = malloc(command_length + directory_length + 2);
-
-            strcpy(file_path, path_token);
-            strcat(file_path, "/");
-            strcat(file_path, command);
-            strcat(file_path, "\0");
-
-            if (stat(file_path, &buffer) == 0)
-            {
-                /* return value of 0 means success implying that the file_path is valid*/
-
-                /* free up allocated memory before returning your file_path */
-                free(path_copy);
-
-                return (file_path);
-            }
-            else
-            {
-
-                /* free up the file_path memory so we can check for another path*/
-                free(file_path);
-                path_token = strtok(NULL, ":");
-
-            }
-
-         }
-	 free(path_copy);
+        char *file_path = malloc(file_path_length);
         
-
-        /* before we exit without luck, let's see if the command itself is a file_path that exists */
-        if (stat(command, &buffer) == 0)
-        {
-            return (command);
+	if (file_path == NULL)
+	{
+            free(path_copy);
+            return NULL; /* Memory allocation failed */
         }
 
+        _strcpy(file_path, path_token);
+        _strcat(file_path, "/");
+        _strcat(file_path, command);
 
+        if (stat(file_path, &buffer) == 0) 
+	{
+            /* The file exists */
+            free(path_copy); /* Free path_copy since you're returning file_path */
+            return file_path;
+        } else 
+	{
+            /*Free file_path before looping */
+            free(file_path);
+            path_token = strtok(NULL, ":");
+        }
+    }
 
-        return (NULL);
+    free(path_copy);
 
+    /* If the command isn't found in any directory, check if it's a valid file in the current directory*/
+    if (stat(command, &buffer) == 0) 
+    {
+        return _strdup(command); /* Return a duplicate, since you'll free this later */
+    }
+
+    return NULL; /*Command not found*/
 }
+
