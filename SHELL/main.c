@@ -2,8 +2,7 @@
 
 int main(int ac, char **av, char **env)
 {
-
-    char *lineptr;
+    char *lineptr = NULL;
     char *lineptr_cpy = NULL;
     const char *delim = " \n";
     size_t n = 0;
@@ -19,74 +18,117 @@ int main(int ac, char **av, char **env)
 
     prompt = ":$ ";
 
-	while (1)
-	{
-		
+    while (1)
+    {
+        _puts(prompt);
+        line = getline(&lineptr, &n, stdin);
 
-		printf("%s", prompt);
-		line = getline(&lineptr, &n, stdin);
-		lineptr_cpy = _strdup(lineptr);
-
-		if (line == -1)
-             	{
-			free(lineptr);
-			lineptr = NULL;
-			break;
-                }
-		
-		if (lineptr_cpy == NULL)
-		{
-			perror("tsh: memory allocation error");
-			free(lineptr_cpy);
-
-			lineptr_cpy = NULL;
-			break;
-		}
-		
-
-		_strcpy(lineptr_cpy, lineptr);
-		token = strtok(lineptr, delim);
-		
-		while (token != NULL)
-		{
-			num_token++;
-			token = strtok(NULL, delim);
-		}
-		
-		num_token++;
-			
-		argv = malloc(sizeof(char *) * num_token);
-		token = strtok(lineptr_cpy, delim);
-
-		for (i = 0; token != NULL; i++)
-		{
-			argv[i] = malloc(sizeof(char) * strlen(token));
-			_strcpy(argv[i], token);
-			token = strtok(NULL, delim);
-		}
-		
-        	argv[i] = NULL;
-
-		if (_strcmp(argv[0], "printenv") == 0)
-		{
-			_environ(env); /* Pass env to your print_environment function*/
-		}
-
-		if (_strcmp(argv[0], "exit") == 0)
-			_exits();
-		
-		_fork(argv);
-
-		for (j = 0; j < num_token; j++)
-                {
-                        free(argv[j]);
-                }
-
-                free(argv);
-                free(lineptr_cpy);
-
+        if (line == -1)
+        {
+            _puts("EOF Detected\n");
+            free(lineptr);
+            lineptr = NULL;
+            _exits();
         }
-        free(lineptr);
-        return (0);
+        else
+        {
+            lineptr_cpy = _strdup(lineptr);
+
+            if (lineptr_cpy == NULL)
+            {
+                perror("tsh: memory allocation error");
+                free(lineptr_cpy);
+                lineptr_cpy = NULL;
+                break;
+            }
+
+            _strcpy(lineptr_cpy, lineptr);
+            token = strtok(lineptr, delim);
+
+            while (token != NULL)
+            {
+                num_token++;
+                token = strtok(NULL, delim);
+            }
+
+            num_token++;
+
+            argv = malloc(sizeof(char *) * num_token);
+
+            if (argv == NULL)
+            {
+                perror("tsh: memory allocation error");
+                free(lineptr_cpy);
+                free(lineptr);
+                _exits();
+            }
+
+            token = strtok(lineptr_cpy, delim);
+
+            for (i = 0; token != NULL; i++)
+            {
+                argv[i] = malloc(sizeof(char) * strlen(token));
+
+                if (argv[i] == NULL)
+                {
+                    perror("tsh: memory allocation error");
+                    for (j = 0; j < i; j++)
+                    {
+                        free(argv[j]);
+                    }
+                    free(argv);
+                    free(lineptr_cpy);
+                    free(lineptr);
+                    _exits();
+                }
+
+                _strcpy(argv[i], token);
+                token = strtok(NULL, delim);
+            }
+
+            argv[i] = NULL;
+
+            if (argv[0] != NULL) /* Check if the command is not NULL */
+            {
+                if (_strcmp(argv[0], "printenv") == 0)
+                {
+                    _environ(env); /* Pass env to your print_environment function */
+                }
+
+                if (_strcmp(argv[0], "clear") == 0)
+                {
+                    system("clear");
+                }
+
+                if (_strcmp(argv[0], "exit") == 0)
+                {
+                    for (j = 0; j < num_token; j++)
+                    {
+                        free(argv[j]);
+                    }
+                    free(argv);
+                    free(lineptr_cpy);
+                    free(lineptr);
+                    _exits();
+                }
+
+                _fork(argv);
+            }
+            else
+            {
+                /* Handle empty command here, if needed */
+                for (j = 0; j < num_token; j++)
+                {
+                    free(argv[j]);
+                }
+                free(argv);
+            }
+
+            free(lineptr_cpy);
+        }
+    }
+
+    free(lineptr);
+    return 0;
 }
 
