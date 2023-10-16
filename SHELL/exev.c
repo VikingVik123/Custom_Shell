@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+ * exec - function to execute commands
+ * @argv: argument vector
+ * return: void
+ */
+
 void exec(char **argv)
 {
 	char *command = NULL;
@@ -8,7 +14,7 @@ void exec(char **argv)
 	if (argv)
 	{
 		command = argv[0];
-		actual_command = get_location(command);
+		actual_command = search_in_path(command);
 
 		if (execve(actual_command, argv, NULL) == -1)
 		{

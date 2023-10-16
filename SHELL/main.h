@@ -11,6 +11,8 @@
 
 void exec(char **argv);
 char *get_location(char *command);
+char *search_in_current_directory(const char *command);
+char *search_in_path(const char *command);
 
 /*string headers*/
 int _strlen(const char *s);
@@ -18,7 +20,7 @@ void _puts(char *str);
 char *_strcpy(char *dest, const char *src);
 int _putchar(char c);
 int _strcmp(char *s1, char *s2);
-char *_strcat(char *dest, char *src);
+char *_strcat(char *dest, const char *src);
 char *_strdup(const char *str);
 
 

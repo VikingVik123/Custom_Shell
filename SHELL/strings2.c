@@ -29,15 +29,16 @@ char *_strdup(const char *str)
  *
  * Return: pointer to destination buffer
  */
-char *_strcat(char *dest, char *src)
+char *_strcat(char *dest, const char *src)
 {
-	char *ret = dest;
+    char *ret = dest;
 
-	while (*dest)
-		dest++;
-	while (*src)
-		*dest++ = *src++;
-	*dest = *src;
-	*dest = '\0';
-	return (ret);
+    while (*dest)
+        dest++;
+
+    while (*src)
+        *dest++ = *src++;
+
+    *dest = '\0';
+    return ret;
 }
