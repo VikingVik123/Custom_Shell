@@ -11,7 +11,7 @@ int main(int ac, char **av, char **env)
     int num_token = 0;
     int i = 0;
     int j = 0;
-    char **argv;
+    char **argv = NULL;
     char *prompt;
     (void)ac;
     (void)av;
@@ -53,7 +53,7 @@ int main(int ac, char **av, char **env)
 
             num_token++;
 
-            argv = malloc(sizeof(char *) * num_token);
+            argv = malloc(sizeof(char *) * num_token + 1);
 
             if (argv == NULL)
             {
@@ -126,6 +126,12 @@ int main(int ac, char **av, char **env)
 
             free(lineptr_cpy);
         }
+
+	for (i = 0; i < num_token; i++)
+        {
+            free(argv[i]);
+        }
+        free(argv);
     }
 
     free(lineptr);
