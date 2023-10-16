@@ -6,7 +6,7 @@ void _environ(char **env)
     	int i = 0;
 	while (env[i] != NULL)
 	{
-		 printf("%s\n", env[i]);
+		 _puts(env[i]);
 		 i++;
 	}
 }

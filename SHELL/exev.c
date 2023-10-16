@@ -12,7 +12,9 @@ void exec(char **argv)
 
 		if (execve(actual_command, argv, NULL) == -1)
 		{
+			free(actual_command);
 			perror("Error:");
+			_exits();
 		}
 		free(actual_command);
 	}

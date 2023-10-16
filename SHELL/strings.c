@@ -6,7 +6,7 @@
  *
  * Return: the length of the string
  */
-int _strlen(char *s)
+int _strlen(const char *s)
 {
 	int i;
 
@@ -35,7 +35,7 @@ void _puts(char *str)
 	{
 		_putchar(str[i]);
 	}
-	_putchar('\n');
+	_putchar(' ');
 }
 
 
@@ -45,21 +45,22 @@ void _puts(char *str)
  * @src: string to be copied
  * Return: the pointer to dest
  */
-char *_strcpy(char *dest, char *src)
+char *_strcpy(char *dest, const char *src)
 {
 	int len, i;
-
+	
+	i = 0;
 	len = 0;
 
 	while (src[len] != '\0')
 	{
 		len++;
 	}
+	 for (i = 0; i < len; i++)
+        {
+                dest[i] = src[i];
+        }
 
-	for (i = 0; i < len; i++)
-	{
-		dest[i] = src[i];
-	}
 	dest[i] = '\0';
 
 	return (dest);

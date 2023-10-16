@@ -67,7 +67,7 @@ int main(int ac, char **av, char **env)
 
             for (i = 0; token != NULL; i++)
             {
-                argv[i] = malloc(sizeof(char) * strlen(token));
+                argv[i] = malloc(sizeof(char) * _strlen(token) + 1);
 
                 if (argv[i] == NULL)
                 {
