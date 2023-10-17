@@ -22,6 +22,7 @@ int _putchar(char c);
 int _strcmp(char *s1, char *s2);
 char *_strcat(char *dest, const char *src);
 char *_strdup(const char *str);
+char* _strchr(const char* str, int character);
 
 
 void _fork(char **argv);

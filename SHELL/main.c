@@ -30,15 +30,17 @@ int main(int ac, char **av, char **env)
             lineptr = NULL;
             _exits();
         }
-        else
-        {
+	else if (line > 1)
+	{
+	
             lineptr_cpy = _strdup(lineptr);
 
             if (lineptr_cpy == NULL)
             {
                 perror("tsh: memory allocation error");
-                free(lineptr_cpy);
-                lineptr_cpy = NULL;
+                free(lineptr);
+		lineptr = NULL;
+                
                 break;
             }
 
@@ -137,4 +139,3 @@ int main(int ac, char **av, char **env)
     free(lineptr);
     return 0;
 }
-

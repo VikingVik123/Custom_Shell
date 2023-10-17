@@ -42,3 +42,20 @@ char *_strcat(char *dest, const char *src)
     *dest = '\0';
     return ret;
 }
+
+char* _strchr(const char* str, int character)
+{
+    while (*str != '\0')
+    {
+        if (*str == character)
+	{
+            return (char*)str;
+        }
+        str++;
+    }
+    if (character == '\0')
+    {
+        return (char*)str;
+    }
+    return NULL;
+}
